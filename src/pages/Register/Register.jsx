@@ -1,15 +1,49 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { CustomInput } from "../../components/custom-input/CustomInput";
+import { toast } from "react-toastify";
 
 const initialState = {
-  passWord: "Earth@2023",
-  confirmPassWord: "Earth@2023",
+  password: "Earth@2023",
+  confirmPassword: "Earth@2023",
 };
 
 export const Register = () => {
   const [frmData, setFrmData] = useState(initialState);
   const [error, setError] = useState("");
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "password") {
+      setError("");
+      value.length < 6 && setError("Password is too short");
+      !/[0-9]/.test(value) && setError("Must include number");
+      !/[A-Z]/.test(value) && setError("Must include uppercase");
+      !/[a-z]/.test(value) && setError("Must include lowercase");
+    }
+
+    setFrmData({
+      ...frmData,
+      [name]: value,
+    });
+  };
+
+  const handleOnSubmit = (e) => {
+    // try {
+    e.preventDefault();
+
+    const { confirmPassword, password } = frmData;
+    if (confirmPassword !== password) {
+      return toast.error("Password do not match");
+    } else {
+      alert("password matches");
+    }
+    // } catch (error) {
+    //   toast.error(error.message);
+    // }
+  };
+
   const inputFields = [
     { label: "First Name", name: "fName", placeholder: "Sam", required: true },
     { label: "Last Name", name: "lName", placeholder: "Smith", required: true },
@@ -40,12 +74,12 @@ export const Register = () => {
 
   return (
     <div className="form-container">
-      <div className="border p-5 rounded shadow-lg">
+      <Form onSubmit={handleOnSubmit} className="border p-5 rounded shadow-lg">
         <h3>Join our System</h3>
         <hr />
 
         {inputFields.map((item, i) => (
-          <CustomInput key={i} {...item} />
+          <CustomInput key={i} {...item} onChange={handleOnChange} />
         ))}
 
         <div className="p-3">
@@ -59,10 +93,10 @@ export const Register = () => {
             )}
           </Form.Text>
         </div>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={error}>
           Submit
         </Button>
-      </div>
+      </Form>
     </div>
   );
 };

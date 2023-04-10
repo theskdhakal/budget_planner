@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
-const Layout = ({ children }) => {
+export const Layout = ({ children }) => {
   return (
     <div>
       <Header />
@@ -14,5 +14,3 @@ const Layout = ({ children }) => {
     </div>
   );
 };
-
-export default Layout;
